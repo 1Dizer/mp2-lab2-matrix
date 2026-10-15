@@ -37,10 +37,11 @@ public:
   }
   TDynamicVector(const TDynamicVector& v)
   {
-      size = v.size;
-      vec = new T[size];
-      for (int i = 0; i < size; i++) {
-          vec[i] = v.vec[i];
+      size = v.pMem;
+      pMem = new T[size];
+      for (int i = 0; i < size; i++) 
+      {
+          pMem[i] = v.pMem[i];
       }
   }
   TDynamicVector(TDynamicVector&& v) noexcept
@@ -48,10 +49,17 @@ public:
   }
   ~TDynamicVector()
   {
-      delete[] vec;
+      delete[] pMem;
   }
   TDynamicVector& operator=(const TDynamicVector& v)
   {
+      if (this == &v)
+          return *this;
+      size = bf.size;
+      delete[] pMem;
+      pMem = new T[size];
+      memcpy(pMem, v.pMem, size.sizeof(T));
+      return *this;
   }
   TDynamicVector& operator=(TDynamicVector&& v) noexcept
   {
@@ -62,11 +70,11 @@ public:
   // индексация
   T& operator[](size_t ind)
   {
-      return vec[n];
+      return pMem[ind];
   }
   const T& operator[](size_t ind) const
   {
-      return vec[n];
+      return pMem[ind];
   }
   // индексация с контролем
   T& at(size_t ind)
@@ -87,7 +95,7 @@ public:
               return false;
           for (int i = 0; i < size; i++)
           {
-              if (vec[i] != v.vec[i])
+              if (pMem[i] != v.pMem[i])
                   return false;
           }
       }
@@ -95,7 +103,9 @@ public:
   }
   bool operator!=(const TDynamicVector& v) const noexcept
   {
-      return !(_Adjacent_find_vectorized == v.vec)
+      return !(pMem == v.pMem);
+      s
+
   }
 
   // скалярные операции
@@ -112,6 +122,7 @@ public:
   // векторные операции
   TDynamicVector operator+(const TDynamicVector& v)
   {
+      
   }
   TDynamicVector operator-(const TDynamicVector& v)
   {
