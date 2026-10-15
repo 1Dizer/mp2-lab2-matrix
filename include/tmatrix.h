@@ -37,12 +37,18 @@ public:
   }
   TDynamicVector(const TDynamicVector& v)
   {
+      size = v.size;
+      vec = new T[size];
+      for (int i = 0; i < size; i++) {
+          vec[i] = v.vec[i];
+      }
   }
   TDynamicVector(TDynamicVector&& v) noexcept
   {
   }
   ~TDynamicVector()
   {
+      delete[] vec;
   }
   TDynamicVector& operator=(const TDynamicVector& v)
   {
@@ -56,9 +62,11 @@ public:
   // индексация
   T& operator[](size_t ind)
   {
+      return vec[n];
   }
   const T& operator[](size_t ind) const
   {
+      return vec[n];
   }
   // индексация с контролем
   T& at(size_t ind)
@@ -71,9 +79,23 @@ public:
   // сравнение
   bool operator==(const TDynamicVector& v) const noexcept
   {
+      if (*this == v) {
+          return true;
+      }
+      else {
+          if (size != v.size)
+              return false;
+          for (int i = 0; i < size; i++)
+          {
+              if (vec[i] != v.vec[i])
+                  return false;
+          }
+      }
+      return true;
   }
   bool operator!=(const TDynamicVector& v) const noexcept
   {
+      return !(_Adjacent_find_vectorized == v.vec)
   }
 
   // скалярные операции
